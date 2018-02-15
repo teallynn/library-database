@@ -1,0 +1,24 @@
+extends layout.pug
+
+block main
+  include includes/books.pug
+    table
+      thead
+        tr
+          th Title
+          th Author
+          th Genre
+          th Year Released
+      tbody
+        tr
+          td
+            a(href='book_detail.html') Harry Potter and the Philosopher&apos;s Stone
+          td J.K. Rowling
+          td Fantasy
+          td 1997
+        tr
+          td
+            a(href='book_detail.html') Harry Potter and the Chamber of Secrets
+          td J.K. Rowling
+          td Fantasy
+          td 1998
