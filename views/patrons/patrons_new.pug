@@ -1,0 +1,7 @@
+extends ../layout.pug
+
+block main
+
+  h1 New Patron
+  form(action='/patrons', method='post')
+      include patron_form.pug

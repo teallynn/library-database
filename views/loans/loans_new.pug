@@ -1,8 +1,8 @@
-extends layout
+extends ../layout
 
 block main
 
-  include includes/loans.pug
+  include ../includes/loans.pug
 
   h1 New Loan
     form
@@ -36,6 +36,6 @@ block main
         input#loaned_on(type='text', value='Sun May 22 2016 17:00:00 GMT-0700 (PDT)')
       p
         label(for='return_by') Return by:
-        input#return_by(type='text', value='Sun May 29 2016 17:00:00 GMT-0700 (PDT)') 
+        input#return_by(type='text', value='Sun May 29 2016 17:00:00 GMT-0700 (PDT)')
       p
         input(type='submit', value='Create New Loan')
