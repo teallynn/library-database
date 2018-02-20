@@ -1,4 +1,5 @@
 'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   var Book = sequelize.define('Book', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -10,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     timestamps: false,
   });
   Book.associate = function(models) {
-    // associations can be defined here
+    Book.hasMany(models.Loan);
   };
   return Book;
 };
