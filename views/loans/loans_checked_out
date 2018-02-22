@@ -3,7 +3,9 @@ extends ../layout.pug
 block main
 
   include ../includes/loans.pug
-  h1 #{pageTitle}
+
+  h1 Checked Out Books
+
   table
     thead
       tr

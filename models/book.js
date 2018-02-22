@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     first_published: DataTypes.INTEGER
   }, {
     timestamps: false,
+    underscored: true
   });
   Book.associate = function(models) {
     Book.hasMany(models.Loan);

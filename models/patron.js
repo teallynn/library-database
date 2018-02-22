@@ -11,9 +11,10 @@ module.exports = (sequelize, DataTypes) => {
     zip_code: DataTypes.INTEGER
   }, {
     timestamps: false,
+    underscored: true
   });
   Patron.associate = function(models) {
-    Patron.hasMany(models.Loan);
+    Patron.hasMany(models.Loan, { foreignKey: 'patron_id' });
   };
   return Patron;
 };

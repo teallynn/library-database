@@ -1,0 +1,29 @@
+extends ../layout.pug
+
+block main
+  include ../includes/books.pug
+
+    h1 Book: #{book.title}
+    include books_form.pug
+    h2 Loan History
+    table
+      thead
+        tr
+          th Book
+          th Patron
+          th Loaned on
+          th Return by
+          th Returned on
+          th Action
+      tbody
+      each loan in loans
+        tr
+          td
+            a(href='/books/' + book.id)= book.title
+          td
+            a(href='/patrons/' + loan.patron_id)= loan.Patron.first_name + ' ' + loan.Patron.last_name
+          td= loan.loaned_on
+          td= loan.return_by
+          td= loan.returned_on
+          td
+            a.button(href='return_book.html') Return Book
