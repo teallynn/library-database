@@ -31,7 +31,7 @@ router.get('/overdue', function(req, res, next) {
     include: [Book, Patron],
     where: {
       returned_on: null,
-      return_by: { isBefore: Date.now() }
+      return_by: { $lt: Date.now() }
       }
     }
   )
@@ -45,7 +45,7 @@ router.get('/new', function(req, res, next) {
   res.render('books/books_new');
 });
 
-/* GET individual book */
+/* GET individual book details*/
 router.get('/:id', function(req, res, next) {
   Book.find({
     include: [
