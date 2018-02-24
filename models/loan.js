@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'Book',
         key: 'id'
+      },
+      validate: {
+        notEmpty: {
+          msg: 'Book ID is required.'
+        }
       }
     },
     patron_id: {
@@ -22,11 +27,46 @@ module.exports = (sequelize, DataTypes) => {
       references: {
         model: 'Patron',
         key: 'id'
+      },
+      validate: {
+        notEmpty: {
+          msg: 'Patron ID is required.'
+        }
       }
     },
-    loaned_on: DataTypes.DATE,
-    return_by: DataTypes.DATE,
-    returned_on: DataTypes.DATE
+    loaned_on: {
+      type: DataTypes.DATEONLY,
+      validate: {
+        notEmpty: {
+          msg: 'Loaned On Date is required.'
+        },
+        isDate: {
+          msg: 'Loaned on  Date must be a valid date.'
+        }
+      }
+    },
+    return_by: {
+      type: DataTypes.DATEONLY,
+      validate: {
+        notEmpty: {
+          msg: 'Return by Date is required.'
+        },
+        isDate: {
+          msg: 'Return by Date must be a valid date.'
+        }
+      }
+    },
+    returned_on: {
+      type: DataTypes.DATEONLY,
+      validate: {
+        notEmpty: {
+          msg: 'Returned on Date is required.'
+        },
+        isDate: {
+          msg: 'Returned on Date must be a valid date.'
+        }
+      }
+    }
   },
   {
     timestamps: false,

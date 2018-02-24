@@ -1,29 +1,20 @@
 extends ../layout.pug
 
 block main
+
   include ../includes/books.pug
 
-    h1 Book: #{book.title}
+  h1 Book: #{book.title}
+
+  if errors
+    ul
+      each error in errors
+        li
+          em(style='color: red')= error.message
+
+  form(method='post' action='../books/' + book.id)
     include books_form.pug
-    h2 Loan History
-    table
-      thead
-        tr
-          th Book
-          th Patron
-          th Loaned on
-          th Return by
-          th Returned on
-          th Action
-      tbody
-      each loan in loans
-        tr
-          td
-            a(href='/books/' + book.id)= book.title
-          td
-            a(href='/patrons/' + loan.patron_id)= loan.Patron.first_name + ' ' + loan.Patron.last_name
-          td= loan.loaned_on
-          td= loan.return_by
-          td= loan.returned_on
-          td
-            a.button(href='return_book.html') Return Book
+    p
+      input(type='submit' value='Update')
+
+  include ../includes/loan_history.pug

@@ -5,7 +5,7 @@ var Book = require('../models').Book;
 var Loan = require('../models').Loan;
 
 
-/* GET patrons listing. */
+/**************************** GET patrons listing. **************************/
 router.get('/', function(req, res, next) {
   Patron.findAll().then(function(patrons) {
     res.render('patrons/patrons', { patrons: patrons });
@@ -13,31 +13,36 @@ router.get('/', function(req, res, next) {
 
 });
 
-/* POST create new patron */
-router.post('/', function(req, res, next) {
-  Patron.create(req.body).then(function(patron) {
-    res.redirect('/patrons/' + patron.id);
-  });
-});
-
-
-/* Create new patron form */
+/********************** GET new patron form ******************************/
 router.get('/new', function(req, res, next) {
-  res.render('patrons/patrons_new', { patron: {} });
+  let patron = Patron.build();
+  res.render('patrons/patrons_new', { patron: patron, pageTitle: 'New Patron' });
 });
 
+/************************* POST create new patron *************************/
+router.post('/', function(req, res, next) {
+  Patron.create(req.body)
+        .then(function(patron) {
+          res.redirect('/patrons');
+        })
+        .catch(function(err) {
+          if(err.name === "SequelizeValidationError") {
+            let patron = Patron.build();
+            res.render('patrons/patrons_new', { patron: patron, pageTitle: 'New Patron', errors: err ? err.errors : [] });
+          } else {
+          console.log(err);
+        };
+        });
+});
 
-/* GET individual patron */
+/************************* GET individual patron ****************************/
 router.get('/:id', function(req, res, next) {
   Patron.find({
     include: [
     {
       model: Loan,
-        include: [
-          {
-            model: Book,
-          }
-        ]}
+        include: [Book, Patron]
+      }
     ],
     where:
       {
@@ -46,8 +51,47 @@ router.get('/:id', function(req, res, next) {
     }).then(function(patron) {
       let loans = patron.Loans;
       res.render('patrons/patron_detail', { patron: patron, loans: loans });
-  })
+  });
 });
 
+/************************* POST update patron ****************************/
+router.post('/:id', function(req, res, next) {
+  Patron.find({
+    include: [
+    {
+      model: Loan,
+        include: [Book, Patron]
+      }
+    ],
+    where:
+      {
+        id: req.params.id
+      }
+    }).then(function(patron) {
+      return patron.update(req.body);
+    }).then(function(patron) {
+      res.redirect('/patrons');
+    }).catch(function(err) {
+      if(err.name === "SequelizeValidationError") {
+        Patron.find({
+          include: [
+          {
+            model: Loan,
+              include: [Book, Patron]
+            }
+          ],
+          where:
+            {
+              id: req.params.id
+            }
+          }).then(function(patron) {
+            let loans = patron.Loans;
+            res.render('patrons/patron_detail', { patron: patron, loans: loans, errors: err ? err.errors : [] });
+        });
+      } else {
+      console.log(err);
+    };
+    });
+});
 
 module.exports = router;

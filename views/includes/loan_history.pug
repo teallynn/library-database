@@ -1,0 +1,23 @@
+h2 Loan History
+table
+  thead
+    tr
+      th Book
+      th Patron
+      th Loaned on
+      th Return by
+      th Returned on
+      th Action
+  tbody
+  each loan in loans
+    tr
+      td
+        a(href='/books/' + loan.book_id)= loan.Book.title
+      td
+        a(href='/patrons/' + loan.patron_id)= loan.Patron.first_name + ' ' + loan.Patron.last_name
+      td= loan.loaned_on
+      td= loan.return_by
+      td= loan.returned_on
+      td
+        unless loan.returned_on
+          a.button(href='../loans/return' + loan.id) Return Book

@@ -4,7 +4,7 @@ var Book = require('../models').Book;
 var Loan = require('../models').Loan;
 var Patron = require('../models').Patron;
 
-/* GET books listing. */
+/**************************** GET books listing. *************************/
 router.get('/', function(req, res, next) {
   Book.findAll()
     .then(function(books) {
@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
   })
 });
 
-/* GET checked out books listing. */
+/************************ GET checked out books listing.*******************/
 router.get('/out', function(req, res, next) {
   Loan.findAll({
      include: [Book, Patron],
@@ -25,7 +25,7 @@ router.get('/out', function(req, res, next) {
   })
 });
 
-/* GET overdue books listing. */
+/*********************** GET overdue books listing.**********************/
 router.get('/overdue', function(req, res, next) {
   Loan.findAll({
     include: [Book, Patron],
@@ -41,21 +41,35 @@ router.get('/overdue', function(req, res, next) {
   })
 });
 
+/***************************** GET new book form.***********************/
 router.get('/new', function(req, res, next) {
-  res.render('books/books_new');
+  let book = Book.build();
+  res.render('books/books_new', { book: book, pageTitle: 'New Book' });
 });
 
-/* GET individual book details*/
+/***************************** POST new book form.***********************/
+router.post('/', function(req, res, next) {
+  Book.create(req.body)
+      .then(function(book) {
+        res.redirect('/books');
+      })
+      .catch(function(err) {
+        if(err.name === "SequelizeValidationError") {
+          let book = Book.build();
+          res.render('books/books_new', { book: book, pageTitle: 'New Book', errors: err ? err.errors : [] });
+        } else {
+          console.log(err);
+      }
+      });
+});
+
+/********************** GET individual book details ***********************/
 router.get('/:id', function(req, res, next) {
   Book.find({
     include: [
     {
       model: Loan,
-        include: [
-          {
-            model: Patron,
-          }
-        ]}
+        include: [Patron, Book]}
     ],
     where:
       {
@@ -65,11 +79,47 @@ router.get('/:id', function(req, res, next) {
     .then(function(book) {
       let loans = book.Loans;
       res.render('books/book_detail', { book: book, loans: loans });
-  })
+  });
 });
 
-router.get('/:filter', (req, res) => {
-  res.render('');
+/**************************** POST update book ***************************/
+router.post('/:id', function(req, res, next){
+  Book.find({
+    include: [
+    {
+      model: Loan,
+        include: [Patron, Book]}
+    ],
+    where:
+      {
+        id: req.params.id
+      }
+    })
+    .then(function(book){
+      return book.update(req.body);
+  }).then(function(book){
+    res.redirect('/books');
+  }).catch(function(err){
+    if(err.name === "SequelizeValidationError") {
+      Book.find({
+        include: [
+        {
+          model: Loan,
+            include: [Patron, Book]}
+        ],
+        where:
+          {
+            id: req.params.id
+          }
+        })
+        .then(function(book) {
+          let loans = book.Loans;
+          res.render('books/book_detail', { book: book, loans: loans, errors: err ? err.errors : [] });
+      });
+    } else {
+      console.log(err);
+    }
+   });
 });
 
 module.exports = router;

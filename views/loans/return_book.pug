@@ -4,7 +4,14 @@ block main
 
   include ../includes/loans.pug
 
-  h1 Patron: Return Book
+  h1 Patron: #{pageTitle}
+
+  if errors
+    ul
+      each error in errors
+        li
+          em(style='color: red')= error.message
+
   p
     strong Book Title:
     |  #{loan.Book.title}
@@ -13,13 +20,14 @@ block main
     |  #{loan.Patron.first_name} #{loan.Patron.last_name}
   p
     strong Loaned On:
-    |  2015-12-11
+    |  #{loan.loaned_on}
   p
     strong Return By:
     |  #{loan.return_by}
-  form
+
+  form(method='post' action="../loans/return" + loan.id)
     p
       label(for='returned_on') Returned on:
-      input#returned_on(type='text' value=today)
+      input#returned_on(name='returned_on' type='text' value=loan.returned_on)
     p
       input(type='submit' value='Return Book')

@@ -5,22 +5,29 @@ block main
   include ../includes/loans.pug
 
   h1 New Loan
-    form
-      p
-        label(for='book_id') Book
-        select#book_id
-          each book in books
-            option(value=book.id)= book.title
-      p
-        label(for='patron_id') Patron
-        select#patron_id
-          each patron in patrons
-            option(value=patron.id)= patron.first_name + ' ' + patron.last_name
-      p
-        label(for='loaned_on') Loaned on:
-        input#loaned_on(type='text', value=today)
-      p
-        label(for='return_by') Return by:
-        input#return_by(type='text', value=nextWeek)
-      p
-        input(type='submit', value='Create New Loan')
+
+  if errors
+    ul
+      each error in errors
+        li
+          em(style='color: red')= error.message
+
+  form(method='POST' action='../loans')
+    p
+      label(for='book_id') Book
+      select#book_id(name='book_id')
+        each book in books
+          option(value=book.id selected=(book.id == loan.book_id))= book.title
+    p
+      label(for='patron_id') Patron
+      select#patron_id(name='patron_id')
+        each patron in patrons
+          option(value=patron.id selected=(patron.id == loan.patron_id))= patron.first_name + ' ' + patron.last_name
+    p
+      label(for='loaned_on') Loaned on:
+      input#loaned_on(type='text' name='loaned_on' value=loan.loaned_on)
+    p
+      label(for='return_by') Return by:
+      input#return_by(type='text' name='return_by' value=loan.return_by)
+    p
+      input(type='submit' value='Create New Loan')

@@ -3,26 +3,13 @@ extends ../layout.pug
 block main
 
   h1= patron.first_name + ' ' + patron.last_name
-     include patron_form.pug
-     h2 Loan History
-     table
-       thead
-         tr
-           th Book
-           th Patron
-           th Loaned on
-           th Return by
-           th Returned on
-           th Action
-       tbody
-       each loan in loans
-         tr
-           td
-             a(href="/books/" + loan.book_id)= loan.Book.title
-           td
-             a(href="/patrons/" + patron.id)= patron.first_name + ' ' + patron.last_name
-           td= loan.loaned_on
-           td= loan.return_by
-           td= loan.returned_on
-           td
-             a.button(href="return_book.html") Return Book
+
+  if errors
+    ul
+      each error in errors
+        li
+          em(style='color: red')= error.message
+
+  form(action='/patrons/' + patron.id method='post')
+    include patron_form.pug
+  include ../includes/loan_history.pug
