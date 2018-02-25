@@ -19,8 +19,22 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    address: DataTypes.STRING,
-    email: DataTypes.STRING,
+    address: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: 'Last name is required.'
+        }
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: 'Last name is required.'
+        }
+      }
+    },
     library_id: {
       type: DataTypes.STRING,
       validate: {
@@ -29,7 +43,14 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    zip_code: DataTypes.INTEGER
+    zip_code: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: 'Last name is required.'
+        }
+      }
+    }
   }, {
     timestamps: false,
     underscored: true
